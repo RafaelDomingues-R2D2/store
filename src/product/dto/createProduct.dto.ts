@@ -1,13 +1,12 @@
 import {
   ArrayMinSize,
   IsArray,
-  IsDecimal,
   IsNotEmpty,
   IsNumber,
   IsPositive,
+  IsUUID,
   MaxLength,
   Min,
-  MinLength,
   ValidateNested,
 } from 'class-validator';
 import { ProductCharacteristicsDTO } from './productCharacteristicsDTO';
@@ -15,6 +14,9 @@ import { Type } from 'class-transformer';
 import { ProductImagesDTO } from './productImages.dto';
 
 export class CreateProductDto {
+  @IsUUID()
+  userId: string;
+
   @IsNotEmpty()
   name: string;
 
