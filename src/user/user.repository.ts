@@ -11,4 +11,8 @@ export class UserRepository {
   async findAll() {
     return this.users;
   }
+
+  async emailExists(email: string): Promise<boolean> {
+    return this.users.some((user) => user.email === email);
+  }
 }
