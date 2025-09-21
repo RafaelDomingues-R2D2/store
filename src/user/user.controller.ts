@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { UserRepository } from './user.repository';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UserEntity } from './user.entity';
 import { v4 as uuid } from 'uuid';
 import { FindAllUsersDTO } from './dto/findAllUser.dto';
+import { UpdateUserDto } from './dto/updateUser.dto';
 
 @Controller('/users')
 export class UserController {
@@ -18,6 +19,7 @@ export class UserController {
     userEntity.password = userData.password;
 
     this.userRepository.create(userEntity);
+
     return { user: new FindAllUsersDTO(userEntity.id, userEntity.name) };
   }
 
@@ -29,5 +31,14 @@ export class UserController {
     );
 
     return usersList;
+  }
+
+  @Put('/:id')
+  async updateUser(@Param('id') id: string, @Body() newData: UpdateUserDto) {
+    const updateUser = await this.userRepository.update(id, newData);
+
+    return {
+      user: updateUser,
+    };
   }
 }
