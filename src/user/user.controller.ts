@@ -12,7 +12,7 @@ import { CreateUserDto } from './dto/createUser.dto';
 import { UserEntity } from './user.entity';
 import { v4 as uuid } from 'uuid';
 import { FindAllUsersDTO } from './dto/findAllUser.dto';
-import { UpdateUserDto } from './dto/updateUser.dto';
+import { UpdateUserDTO } from './dto/updateUser.dto';
 
 @Controller('/users')
 export class UserController {
@@ -42,7 +42,7 @@ export class UserController {
   }
 
   @Put('/:id')
-  async updateUser(@Param('id') id: string, @Body() newData: UpdateUserDto) {
+  async updateUser(@Param('id') id: string, @Body() newData: UpdateUserDTO) {
     const updateUser = await this.userRepository.update(id, newData);
 
     return {

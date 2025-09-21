@@ -1,13 +1,7 @@
-import {
-  IsEmail,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  MinLength,
-} from 'class-validator';
+import { IsEmail, IsOptional, IsString, MinLength } from 'class-validator';
 import { EmailIsUnique } from '../validation/email-is-unique.validator';
 
-export class UpdateUserDto {
+export class UpdateUserDTO {
   @IsString()
   @IsOptional()
   name?: string;

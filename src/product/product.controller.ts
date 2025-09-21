@@ -1,18 +1,75 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { ProductRepository } from './product.repository';
-import { CreateProductDto } from './dto/createProduct.dto';
+import { CreateProductDTO } from './dto/createProduct.dto';
+import { ProductEntity } from './product.entity';
+import { findAllProductDTO } from './dto/findAllUser.dto';
+import { v4 as uuid } from 'uuid';
 
 @Controller('/products')
 export class ProductController {
   constructor(private productRepository: ProductRepository) {}
 
   @Post()
-  async createProduct(@Body() productData: CreateProductDto) {
-    return this.productRepository.create(productData);
+  async createProduct(@Body() productData: CreateProductDTO) {
+    const productEntity = new ProductEntity();
+    productEntity.id = uuid();
+    productEntity.userId = productData.userId;
+    productEntity.name = productData.name;
+    productEntity.value = productData.value;
+    productEntity.availableQuantity = productData.availableQuantity;
+    productEntity.description = productData.description;
+    productEntity.characteristics = productData.characteristics;
+    productEntity.images = productData.images;
+    productEntity.category = productData.category;
+
+    this.productRepository.create(productEntity);
+
+    return {
+      product: new findAllProductDTO(
+        productEntity.id,
+        productEntity.userId,
+        productEntity.name,
+        productEntity.value,
+        productEntity.availableQuantity,
+        productEntity.description,
+        productEntity.characteristics,
+        productEntity.images,
+        productEntity.category,
+      ),
+    };
   }
 
   @Get()
   async findAllProducts() {
     return this.productRepository.findAll();
+  }
+
+  @Put('/:id')
+  async updateProduct(
+    @Param('id') id: string,
+    @Body() newData: CreateProductDTO,
+  ) {
+    const updatedProduct = await this.productRepository.update(id, newData);
+
+    return {
+      product: updatedProduct,
+    };
+  }
+
+  @Delete('/:id')
+  async deleteProduct(@Param('id') id: string) {
+    const deletedProduct = await this.productRepository.delete(id);
+
+    return {
+      product: deletedProduct,
+    };
   }
 }
