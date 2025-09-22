@@ -30,9 +30,11 @@ export class UserController {
     userEntity.email = userData.email;
     userEntity.password = userData.password;
 
-    this.userRepository.create(userEntity);
+    this.userService.create(userEntity);
 
-    return { user: new FindAllUsersDTO(userEntity.id, userEntity.name) };
+    return {
+      user: new FindAllUsersDTO(userEntity.id, userEntity.name),
+    };
   }
 
   @Get()
@@ -44,7 +46,7 @@ export class UserController {
 
   @Put('/:id')
   async updateUser(@Param('id') id: string, @Body() newData: UpdateUserDTO) {
-    const updateUser = await this.userRepository.update(id, newData);
+    const updateUser = await this.userService.update(id, newData);
 
     return {
       user: updateUser,
@@ -53,7 +55,7 @@ export class UserController {
 
   @Delete('/:id')
   async deleteUser(@Param('id') id: string) {
-    const deletedUser = await this.userRepository.delete(id);
+    const deletedUser = await this.userService.delete(id);
 
     return { user: deletedUser, message: 'User deleted successfully' };
   }
