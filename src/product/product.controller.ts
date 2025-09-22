@@ -10,17 +10,19 @@ import {
 import { ProductRepository } from './product.repository';
 import { CreateProductDTO } from './dto/createProduct.dto';
 import { ProductEntity } from './product.entity';
-import { findAllProductDTO } from './dto/findAllUser.dto';
-import { v4 as uuid } from 'uuid';
+import { FindAllProductsDTO } from './dto/findAllProducts.dto';
+import { ProductService } from './product.service';
 
 @Controller('/products')
 export class ProductController {
-  constructor(private productRepository: ProductRepository) {}
+  constructor(
+    private productRepository: ProductRepository,
+    private readonly productService: ProductService,
+  ) {}
 
   @Post()
   async createProduct(@Body() productData: CreateProductDTO) {
     const productEntity = new ProductEntity();
-    productEntity.id = uuid();
     productEntity.userId = productData.userId;
     productEntity.name = productData.name;
     productEntity.value = productData.value;
@@ -30,10 +32,10 @@ export class ProductController {
     // productEntity.images = productData.images;
     productEntity.category = productData.category;
 
-    this.productRepository.create(productEntity);
+    this.productService.create(productEntity);
 
     return {
-      product: new findAllProductDTO(
+      product: new FindAllProductsDTO(
         productEntity.id,
         productEntity.userId,
         productEntity.name,
@@ -49,7 +51,7 @@ export class ProductController {
 
   @Get()
   async findAllProducts() {
-    return this.productRepository.findAll();
+    return this.productService.findAll();
   }
 
   @Put('/:id')
@@ -57,7 +59,7 @@ export class ProductController {
     @Param('id') id: string,
     @Body() newData: CreateProductDTO,
   ) {
-    const updatedProduct = await this.productRepository.update(id, newData);
+    const updatedProduct = await this.productService.update(id, newData);
 
     return {
       product: updatedProduct,
@@ -66,7 +68,7 @@ export class ProductController {
 
   @Delete('/:id')
   async deleteProduct(@Param('id') id: string) {
-    const deletedProduct = await this.productRepository.delete(id);
+    const deletedProduct = await this.productService.delete(id);
 
     return {
       product: deletedProduct,

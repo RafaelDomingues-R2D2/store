@@ -1,4 +1,4 @@
-export class findAllProductDTO {
+export class FindAllProductsDTO {
   constructor(
     readonly id: string,
     readonly userId: string,
