@@ -26,7 +26,7 @@ export class CreateProductDTO {
 
   @IsNumber()
   @Min(0)
-  availableQuantity: number;
+  quantity: number;
 
   @IsNotEmpty()
   @MaxLength(1000)

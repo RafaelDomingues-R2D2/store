@@ -24,10 +24,10 @@ export class ProductController {
     productEntity.userId = productData.userId;
     productEntity.name = productData.name;
     productEntity.value = productData.value;
-    productEntity.availableQuantity = productData.availableQuantity;
+    productEntity.quantity = productData.quantity;
     productEntity.description = productData.description;
-    productEntity.characteristics = productData.characteristics;
-    productEntity.images = productData.images;
+    // productEntity.characteristics = productData.characteristics;
+    // productEntity.images = productData.images;
     productEntity.category = productData.category;
 
     this.productRepository.create(productEntity);
@@ -38,10 +38,10 @@ export class ProductController {
         productEntity.userId,
         productEntity.name,
         productEntity.value,
-        productEntity.availableQuantity,
+        productEntity.quantity,
         productEntity.description,
-        productEntity.characteristics,
-        productEntity.images,
+        // productEntity.characteristics,
+        // productEntity.images,
         productEntity.category,
       ),
     };
