@@ -1,3 +1,4 @@
+import { ProductEntity } from 'src/product/product.entity';
 import {
   Entity,
   Column,
@@ -5,6 +6,7 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
   PrimaryGeneratedColumn,
+  OneToMany,
 } from 'typeorm';
 
 @Entity({ name: 'users' })
@@ -20,6 +22,9 @@ export class UserEntity {
 
   @Column({ name: 'password', length: 255, nullable: false })
   password: string;
+
+  @OneToMany(() => ProductEntity, (productEntity) => productEntity.user)
+  product: ProductEntity[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: string;
