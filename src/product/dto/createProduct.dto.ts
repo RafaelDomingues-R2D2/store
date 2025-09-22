@@ -3,15 +3,48 @@ import {
   IsArray,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsPositive,
+  IsString,
+  IsUrl,
   IsUUID,
   MaxLength,
   Min,
   ValidateNested,
 } from 'class-validator';
-import { ProductCharacteristicsDTO } from './productCharacteristicsDTO';
 import { Type } from 'class-transformer';
-import { ProductImagesDTO } from './productImages.dto';
+import { ProductEntity } from '../product.entity';
+
+export class ProductCharacteristicDTO {
+  @IsOptional()
+  id: string;
+
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @IsString()
+  @IsNotEmpty()
+  description: string;
+
+  @IsOptional()
+  product: ProductEntity;
+}
+
+export class ProductImageDTO {
+  @IsOptional()
+  id: string;
+
+  @IsUrl()
+  url: string;
+
+  @IsString()
+  @IsNotEmpty()
+  description: string;
+
+  @IsOptional()
+  product: ProductEntity;
+}
 
 export class CreateProductDTO {
   @IsUUID()
@@ -34,15 +67,15 @@ export class CreateProductDTO {
 
   @ValidateNested()
   @IsArray()
-  @Type(() => ProductCharacteristicsDTO)
+  @Type(() => ProductCharacteristicDTO)
   @ArrayMinSize(3)
-  characteristics: ProductCharacteristicsDTO[];
+  characteristics: ProductCharacteristicDTO[];
 
   @ValidateNested()
   @IsArray()
-  @Type(() => ProductImagesDTO)
+  @Type(() => ProductImageDTO)
   @ArrayMinSize(1)
-  images: ProductImagesDTO[];
+  images: ProductImageDTO[];
 
   @IsNotEmpty()
   category: string;

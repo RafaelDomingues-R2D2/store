@@ -22,12 +22,9 @@ export class ProductService {
       (product) =>
         new FindAllProductsDTO(
           product.id,
-          product.userId,
           product.name,
-          product.value,
-          product.quantity,
-          product.description,
-          product.category,
+          product.characteristics,
+          product.images,
         ),
     );
 

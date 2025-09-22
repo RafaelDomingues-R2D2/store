@@ -5,7 +5,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  OneToMany,
 } from 'typeorm';
+import { ProductCharacteristicEntity } from './product-characteristic.entity';
+import { ProductImageEntity } from './product-image.entity';
 
 @Entity('products')
 export class ProductEntity {
@@ -30,9 +33,19 @@ export class ProductEntity {
   @Column({ name: 'category', length: 100, nullable: false })
   category: string;
 
-  // characteristics: { name: string; description: string }[];
+  @OneToMany(
+    () => ProductCharacteristicEntity,
+    (productCharacteristicEntity) => productCharacteristicEntity.product,
+    { cascade: true, eager: true },
+  )
+  characteristics: ProductCharacteristicEntity[];
 
-  // images: { url: string; description: string }[];
+  @OneToMany(
+    () => ProductImageEntity,
+    (productImageEntity) => productImageEntity.product,
+    { cascade: true, eager: true },
+  )
+  images: ProductImageEntity[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: string;

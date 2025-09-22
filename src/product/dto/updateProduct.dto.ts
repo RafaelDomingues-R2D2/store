@@ -9,9 +9,8 @@ import {
   Min,
   ValidateNested,
 } from 'class-validator';
-import { ProductCharacteristicsDTO } from './productCharacteristicsDTO';
 import { Type } from 'class-transformer';
-import { ProductImagesDTO } from './productImages.dto';
+import { ProductCharacteristicDTO, ProductImageDTO } from './createProduct.dto';
 
 export class UpdateProductDto {
   @IsOptional()
@@ -36,16 +35,16 @@ export class UpdateProductDto {
   @IsOptional()
   @ValidateNested()
   @IsArray()
-  @Type(() => ProductCharacteristicsDTO)
+  @Type(() => ProductCharacteristicDTO)
   @ArrayMinSize(3)
-  characteristics: ProductCharacteristicsDTO[];
+  characteristics: ProductCharacteristicDTO[];
 
   @IsOptional()
   @ValidateNested()
   @IsArray()
-  @Type(() => ProductImagesDTO)
+  @Type(() => ProductImageDTO)
   @ArrayMinSize(1)
-  images: ProductImagesDTO[];
+  images: ProductImageDTO[];
 
   @IsOptional()
   @IsNotEmpty()

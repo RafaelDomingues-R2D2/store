@@ -1,13 +1,18 @@
+class FindAllProductCharacteristicDTO {
+  name: string;
+  description: string;
+}
+
+class FindAllProductImageticsDTO {
+  url: string;
+  description: string;
+}
+
 export class FindAllProductsDTO {
   constructor(
     readonly id: string,
-    readonly userId: string,
     readonly name: string,
-    readonly value: number,
-    readonly quantity: number,
-    readonly description: string,
-    // readonly characteristics: { name: string; description: string }[],
-    // readonly images: { url: string; description: string }[],
-    readonly category: string,
+    readonly characteristics: FindAllProductCharacteristicDTO[],
+    readonly images: FindAllProductImageticsDTO[],
   ) {}
 }
