@@ -9,22 +9,24 @@ export class UserService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: CreateUserDto) {
-    await this.prisma.user.create({ data });
+    return await this.prisma.user.create({ data });
   }
 
   async findAll() {
     const usersSaved = await this.prisma.user.findMany();
 
-    const usersList = usersSaved.map((user) => new FindAllUsersDTO(user.name));
+    const usersList = usersSaved.map(
+      (user) => new FindAllUsersDTO(user.id, user.name),
+    );
 
     return usersList;
   }
 
   async update(id: string, newData: UpdateUserDTO) {
-    await this.prisma.user.update({ where: { id: id }, data: newData });
+    return await this.prisma.user.update({ where: { id: id }, data: newData });
   }
 
   async delete(id: string) {
-    await this.prisma.user.delete({ where: { id: id } });
+    return await this.prisma.user.delete({ where: { id: id } });
   }
 }

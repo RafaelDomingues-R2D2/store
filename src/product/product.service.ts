@@ -11,7 +11,6 @@ export class ProductService {
   async create(data: CreateProductDTO) {
     await this.prisma.product.create({
       data: {
-        userId: data.userId,
         name: data.name,
         value: data.value,
         availableQuantity: data.availableQuantity,
@@ -38,9 +37,6 @@ export class ProductService {
         id: id,
       },
       data: {
-        user: {
-          connect: { id: newData.userId },
-        },
         name: newData.name,
         value: newData.value,
         availableQuantity: newData.availableQuantity,
