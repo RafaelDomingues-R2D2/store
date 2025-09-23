@@ -5,6 +5,7 @@ import {
   IsNumber,
   IsOptional,
   IsPositive,
+  IsUUID,
   MaxLength,
   Min,
   ValidateNested,
@@ -13,6 +14,9 @@ import { Type } from 'class-transformer';
 import { ProductCharacteristicDTO, ProductImageDTO } from './createProduct.dto';
 
 export class UpdateProductDto {
+  @IsUUID()
+  userId: string;
+
   @IsOptional()
   @IsNotEmpty()
   name: string;
@@ -25,7 +29,7 @@ export class UpdateProductDto {
   @IsOptional()
   @IsNumber()
   @Min(0)
-  quantity: number;
+  availableQuantity: number;
 
   @IsOptional()
   @IsNotEmpty()

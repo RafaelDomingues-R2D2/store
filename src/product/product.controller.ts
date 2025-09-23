@@ -8,9 +8,9 @@ import {
   Put,
 } from '@nestjs/common';
 import { CreateProductDTO } from './dto/createProduct.dto';
-import { ProductEntity } from './product.entity';
 import { ProductService } from './product.service';
 import { randomUUID } from 'crypto';
+import { UpdateProductDto } from './dto/updateProduct.dto';
 
 @Controller('/products')
 export class ProductController {
@@ -18,18 +18,7 @@ export class ProductController {
 
   @Post()
   async createProduct(@Body() productData: CreateProductDTO) {
-    const productEntity = new ProductEntity();
-    productEntity.id = randomUUID();
-    productEntity.userId = productData.userId;
-    productEntity.name = productData.name;
-    productEntity.value = productData.value;
-    productEntity.quantity = productData.quantity;
-    productEntity.description = productData.description;
-    productEntity.characteristics = productData.characteristics;
-    productEntity.images = productData.images;
-    productEntity.category = productData.category;
-
-    return this.productService.create(productEntity);
+    return this.productService.create(productData);
   }
 
   @Get()
@@ -40,7 +29,7 @@ export class ProductController {
   @Put('/:id')
   async updateProduct(
     @Param('id') id: string,
-    @Body() newData: CreateProductDTO,
+    @Body() newData: UpdateProductDto,
   ) {
     const updatedProduct = await this.productService.update(id, newData);
 

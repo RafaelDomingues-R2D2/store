@@ -1,11 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { UserEntity } from './user.entity';
 
 @Injectable()
 export class UserRepository {
-  private users: UserEntity[] = [];
+  private users: any[] = [];
 
-  async create(user: UserEntity) {
+  async create(user) {
     this.users.push(user);
   }
 
@@ -17,7 +16,7 @@ export class UserRepository {
     return this.users.some((user) => user.email === email);
   }
 
-  private async findById(id: string): Promise<UserEntity> {
+  private async findById(id: string) {
     const userExists = this.users.find((user) => user.id === id);
 
     if (!userExists) {
@@ -27,7 +26,7 @@ export class UserRepository {
     return userExists;
   }
 
-  async update(id: string, newData: Partial<UserEntity>) {
+  async update(id: string, newData) {
     const userExists = await this.findById(id);
 
     Object.entries(newData).forEach(([key, value]) => {

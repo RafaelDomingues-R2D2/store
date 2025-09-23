@@ -1,11 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { ProductEntity } from './product.entity';
 
 @Injectable()
 export class ProductRepository {
-  private products: ProductEntity[] = [];
+  private products: any[] = [];
 
-  async create(product: ProductEntity) {
+  async create(product) {
     this.products.push(product);
 
     return product;
@@ -25,7 +24,7 @@ export class ProductRepository {
     return productExists;
   }
 
-  async update(id: string, newData: Partial<ProductEntity>) {
+  async update(id: string, newData) {
     const productExists = await this.findById(id);
 
     Object.entries(newData).forEach(([key, value]) => {

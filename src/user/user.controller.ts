@@ -8,8 +8,6 @@ import {
   Put,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/createUser.dto';
-import { UserEntity } from './user.entity';
-import { v4 as uuid } from 'uuid';
 import { FindAllUsersDTO } from './dto/findAllUser.dto';
 import { UpdateUserDTO } from './dto/updateUser.dto';
 import { UserService } from './user.service';
@@ -20,16 +18,10 @@ export class UserController {
 
   @Post()
   async createUser(@Body() userData: CreateUserDto) {
-    const userEntity = new UserEntity();
-    userEntity.id = uuid();
-    userEntity.name = userData.name;
-    userEntity.email = userData.email;
-    userEntity.password = userData.password;
-
-    this.userService.create(userEntity);
+    this.userService.create(userData);
 
     return {
-      user: new FindAllUsersDTO(userEntity.id, userEntity.name),
+      user: new FindAllUsersDTO(userData.name),
     };
   }
 
@@ -41,7 +33,7 @@ export class UserController {
   }
 
   @Put('/:id')
-  async updateUser(@Param('id') id: string, @Body() newData: UpdateUserDTO) {
+  async update(@Param('id') id: string, @Body() newData: UpdateUserDTO) {
     const updateUser = await this.userService.update(id, newData);
 
     return {

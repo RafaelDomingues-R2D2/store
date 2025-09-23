@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id    String     @id @default(uuid())
+  name  String
+  email String  @unique
+  password String
+
+  createdAt DateTime @default(now())
+
+  products Product[]
+
+  @@map("users")
+}
+
+model Characteristic {
+  id String @id @default(uuid())
+  name String
+  description String
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String @map("product_id")
+
+  @@map("characteristics")
+}
+
+model Image {
+  id String @id @default(uuid())
+  url String
+  description String
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String @map("product_id")
+
+  @@map("images")
+}
+
+model Product {
+  id    String     @id @default(uuid())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+  name  String
+  value Float  
+  availableQuantity Int @map("available_quantity")
+  description String
+  category String
+
+  Characteristics Characteristic[]
+  Images Image[] 
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("products")
+}

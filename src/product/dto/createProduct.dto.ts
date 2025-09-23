@@ -13,12 +13,8 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { ProductEntity } from '../product.entity';
 
 export class ProductCharacteristicDTO {
-  @IsOptional()
-  id: string;
-
   @IsString()
   @IsNotEmpty()
   name: string;
@@ -26,24 +22,15 @@ export class ProductCharacteristicDTO {
   @IsString()
   @IsNotEmpty()
   description: string;
-
-  @IsOptional()
-  product: ProductEntity;
 }
 
 export class ProductImageDTO {
-  @IsOptional()
-  id: string;
-
   @IsUrl()
   url: string;
 
   @IsString()
   @IsNotEmpty()
   description: string;
-
-  @IsOptional()
-  product: ProductEntity;
 }
 
 export class CreateProductDTO {
@@ -59,7 +46,7 @@ export class CreateProductDTO {
 
   @IsNumber()
   @Min(0)
-  quantity: number;
+  availableQuantity: number;
 
   @IsNotEmpty()
   @MaxLength(1000)
