@@ -1,14 +1,20 @@
-import { OrderStatus } from '@prisma/client';
-import { IsEnum, IsNumber, IsPositive, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsArray, IsNumber, IsString, ValidateNested } from 'class-validator';
 
-export class CreateOrderDto {
+export class OrderItemDTO {
+  @IsNumber()
+  quantity: number;
+
+  @IsString()
+  productId: string;
+}
+
+export class CreateOrderDTO {
   @IsString()
   userId: string;
 
-  @IsNumber({ maxDecimalPlaces: 2, allowNaN: false, allowInfinity: false })
-  @IsPositive()
-  totalValue: number;
-
-  @IsEnum(OrderStatus)
-  status: OrderStatus;
+  @ValidateNested()
+  @IsArray()
+  @Type(() => OrderItemDTO)
+  orderItems: OrderItemDTO[];
 }

@@ -8,15 +8,15 @@ import {
   Put,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
-import { CreateOrderDto } from './dto/createOrder.dto';
-import { UpdateOrderDto } from './dto/updateOrder.dto';
+import { UpdateOrderDTO } from './dto/updateOrder.dto';
+import { CreateOrderDTO } from './dto/createOrder.dto';
 
 @Controller('orders')
 export class OrderController {
   constructor(private orderService: OrderService) {}
 
   @Post()
-  async create(@Body() createOrderDto: CreateOrderDto) {
+  async create(@Body() createOrderDto: CreateOrderDTO) {
     return await this.orderService.create(createOrderDto);
   }
 
@@ -28,7 +28,7 @@ export class OrderController {
   @Put('/:id')
   async update(
     @Param('id') id: string,
-    @Body() updateOrderDto: UpdateOrderDto,
+    @Body() updateOrderDto: UpdateOrderDTO,
   ) {
     const order = await this.orderService.update(id, updateOrderDto);
 

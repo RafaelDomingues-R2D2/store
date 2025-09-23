@@ -1,15 +1,65 @@
 import { Injectable } from '@nestjs/common';
-import { CreateOrderDto } from './dto/createOrder.dto';
-import { UpdateOrderDto } from './dto/updateOrder.dto';
 import { FindAllOrdersDTO } from './dto/findAllOrder.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateOrderDTO } from './dto/createOrder.dto';
+import { UpdateOrderDTO } from './dto/updateOrder.dto';
 
 @Injectable()
 export class OrderService {
   constructor(private prisma: PrismaService) {}
 
-  async create(data: CreateOrderDto) {
-    return await this.prisma.order.create({ data: data });
+  async create(data: CreateOrderDTO) {
+    const productIds = data.orderItems.map((orderItem) => orderItem.productId);
+
+    const relatedProducts = await this.prisma.product.findMany({
+      where: { id: { in: productIds } },
+    });
+
+    const newOrderItems = data.orderItems.map((orderItem) => {
+      const product = relatedProducts.find(
+        (product) => product.id === orderItem.productId,
+      );
+
+      return {
+        productId: orderItem.productId,
+        quantity: orderItem.quantity,
+        sellValue: Number(product?.value),
+      };
+    });
+
+    const totalValue = newOrderItems.reduce((total, item) => {
+      return total + Number(item.sellValue) * item.quantity;
+    }, 0);
+
+    newOrderItems.forEach(
+      async (item) =>
+        await this.prisma.product.update({
+          where: { id: item.productId },
+          data: {
+            availableQuantity: {
+              decrement: item.quantity,
+            },
+          },
+        }),
+    );
+
+    const product = await this.prisma.order.create({
+      data: {
+        userId: data.userId,
+        totalValue,
+      },
+    });
+
+    newOrderItems.map((item) =>
+      this.prisma.orderItems.create({
+        data: {
+          orderId: product.id,
+          productId: item.productId,
+          quantity: item.quantity,
+          sellValue: item.sellValue,
+        },
+      }),
+    );
   }
 
   async findAll() {
@@ -28,7 +78,7 @@ export class OrderService {
     return orderList;
   }
 
-  async update(id: string, newData: UpdateOrderDto) {
+  async update(id: string, newData: UpdateOrderDTO) {
     return await this.prisma.order.update({
       where: {
         id: id,
