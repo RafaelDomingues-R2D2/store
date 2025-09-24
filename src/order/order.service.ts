@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { FindAllOrdersDTO } from './dto/findAllOrder.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateOrderDTO } from './dto/createOrder.dto';
@@ -17,11 +21,31 @@ export class OrderService {
       throw new NotFoundException('User not found');
     }
 
+    function processesOrderData(orderData, relatedProducts) {
+      orderData.orderItems.forEach((orderItem) => {
+        const relatedProduct = relatedProducts.find(
+          (product) => product.id === orderItem.productId,
+        );
+
+        if (!relatedProduct) {
+          throw new NotFoundException('Product not found');
+        }
+
+        if (orderItem.quantity > relatedProduct.availableQuantity) {
+          throw new BadRequestException(
+            `Product quantity not available, id: ${orderItem.productId}`,
+          );
+        }
+      });
+    }
+
     const productIds = data.orderItems.map((orderItem) => orderItem.productId);
 
     const relatedProducts = await this.prisma.product.findMany({
       where: { id: { in: productIds } },
     });
+
+    processesOrderData(data, relatedProducts);
 
     const newOrderItems = data.orderItems.map((orderItem) => {
       const product = relatedProducts.find(
