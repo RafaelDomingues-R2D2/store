@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateProductDto } from './dto/updateProduct.dto';
 import { FindAllProductsDTO } from './dto/findAllProducts.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -32,6 +32,14 @@ export class ProductService {
   }
 
   async update(id: string, newData: UpdateProductDto) {
+    const productExists = await this.prisma.product.findUnique({
+      where: { id: id },
+    });
+
+    if (!productExists) {
+      throw new NotFoundException('Product not found');
+    }
+
     await this.prisma.product.update({
       where: {
         id: id,

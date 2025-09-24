@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { FindAllOrdersDTO } from './dto/findAllOrder.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateOrderDTO } from './dto/createOrder.dto';
@@ -9,6 +9,14 @@ export class OrderService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: CreateOrderDTO) {
+    const userExists = await this.prisma.user.findUnique({
+      where: { id: data.userId },
+    });
+
+    if (!userExists) {
+      throw new NotFoundException('User not found');
+    }
+
     const productIds = data.orderItems.map((orderItem) => orderItem.productId);
 
     const relatedProducts = await this.prisma.product.findMany({
@@ -79,6 +87,22 @@ export class OrderService {
   }
 
   async update(id: string, newData: UpdateOrderDTO) {
+    const userExists = await this.prisma.user.findUnique({
+      where: { id: newData.userId },
+    });
+
+    if (!userExists) {
+      throw new NotFoundException('User not found');
+    }
+
+    const orderExists = await this.prisma.order.findUnique({
+      where: { id: id },
+    });
+
+    if (!orderExists) {
+      throw new NotFoundException('Order not found');
+    }
+
     return await this.prisma.order.update({
       where: {
         id: id,
