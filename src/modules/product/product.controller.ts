@@ -6,11 +6,12 @@ import {
   Param,
   Post,
   Put,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CreateProductDTO } from './dto/createProduct.dto';
 import { ProductService } from './product.service';
-import { randomUUID } from 'crypto';
 import { UpdateProductDto } from './dto/updateProduct.dto';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 
 @Controller('/products')
 export class ProductController {
@@ -22,7 +23,10 @@ export class ProductController {
   }
 
   @Get()
+  @UseInterceptors(CacheInterceptor)
   async findAllProducts() {
+    console.log('fitching product');
+
     return this.productService.findAll();
   }
 
