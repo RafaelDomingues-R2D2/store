@@ -4,16 +4,18 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
-import { UserRepository } from '../user.repository';
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 @ValidatorConstraint({ async: true })
 export class EmailIsUniqueValidator implements ValidatorConstraintInterface {
-  constructor(private userRepository: UserRepository) {}
+  constructor(private prisma: PrismaService) {}
 
   async validate(value: any): Promise<boolean> {
-    const emailExists = await this.userRepository.emailExists(value);
+    const emailExists = await this.prisma.user.findUnique({
+      where: { email: value },
+    });
 
     return !emailExists;
   }
