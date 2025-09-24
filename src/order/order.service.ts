@@ -115,6 +115,8 @@ export class OrderService {
       where: { id: newData.userId },
     });
 
+    throw new Error('Simulando erro no banco de dados');
+
     if (!userExists) {
       throw new NotFoundException('User not found');
     }
