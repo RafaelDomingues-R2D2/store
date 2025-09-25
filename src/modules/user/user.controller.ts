@@ -10,14 +10,18 @@ import {
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdateUserDTO } from './dto/updateUser.dto';
 import { UserService } from './user.service';
+import { TransformPasswordIntoHash } from 'src/resources/pipes/transform-password-into-hash.pipe';
 
 @Controller('/users')
 export class UserController {
   constructor(private userService: UserService) {}
 
   @Post()
-  async createUser(@Body() userData: CreateUserDto) {
-    return this.userService.create(userData);
+  async createUser(
+    @Body() { password, ...userData }: CreateUserDto,
+    @Body('password', TransformPasswordIntoHash) passwordHash: string,
+  ) {
+    return this.userService.create({ ...userData, password: passwordHash });
   }
 
   @Get()
