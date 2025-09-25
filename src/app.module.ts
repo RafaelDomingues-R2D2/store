@@ -7,6 +7,7 @@ import { APP_FILTER } from '@nestjs/core';
 import { GlobalExceptionFilter } from './resources/filters/global-exception-filter';
 import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-yet';
+import { AuthenticationModule } from './modules/authentication/authentication.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { redisStore } from 'cache-manager-redis-yet';
     UserModule,
     ProductModule,
     OrderModule,
+    AuthenticationModule,
   ],
   providers: [{ provide: APP_FILTER, useClass: GlobalExceptionFilter }],
 })

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { FindAllUsersDTO } from './dto/findAllUser.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dto/createUser.dto';
@@ -20,6 +20,18 @@ export class UserService {
     );
 
     return usersList;
+  }
+
+  async findByEmail(email: string) {
+    const userExist = await this.prisma.user.findUnique({
+      where: { email: email },
+    });
+
+    if (userExist === null) {
+      throw new BadRequestException('Email not found');
+    }
+
+    return userExist;
   }
 
   async update(id: string, newData: UpdateUserDTO) {
