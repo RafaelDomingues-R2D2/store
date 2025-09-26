@@ -115,18 +115,16 @@ export class OrderService {
       where: { id: newData.userId },
     });
 
-    throw new Error('Simulando erro no banco de dados');
-
-    if (!userExists) {
-      throw new NotFoundException('User not found');
-    }
-
     const orderExists = await this.prisma.order.findUnique({
       where: { id: id },
     });
 
     if (!orderExists) {
       throw new NotFoundException('Order not found');
+    }
+
+    if (orderExists.userId !== userExists?.id) {
+      throw new NotFoundException("You don't have permission");
     }
 
     return await this.prisma.order.update({
