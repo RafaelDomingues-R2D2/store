@@ -6,11 +6,14 @@ import {
   Param,
   Delete,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { UpdateOrderDTO } from './dto/updateOrder.dto';
 import { CreateOrderDTO } from './dto/createOrder.dto';
+import { AuthenticationGuard } from '../authentication/authentication/authentication.guard';
 
+@UseGuards(AuthenticationGuard)
 @Controller('orders')
 export class OrderController {
   constructor(private orderService: OrderService) {}
